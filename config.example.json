@@ -1,0 +1,17 @@
+{
+  "sync": {
+    "save_old": false
+  },
+  "http": {
+    "listen_host": "0.0.0.0",
+    "listen_port": 8001
+  },
+  "database": {
+    "db_type": "sqlite",
+    "db_name": "tabbyss.db",
+    "db_host": "127.0.0.1",
+    "db_port": "3306",
+    "db_user": "tabbyss",
+    "db_pass": "tabbyss"
+  }
+}
