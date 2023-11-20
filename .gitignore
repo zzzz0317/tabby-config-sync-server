@@ -1,5 +1,9 @@
 config.json
 *.db
+*.pem
+*.crt
+*.cer
+*.key
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

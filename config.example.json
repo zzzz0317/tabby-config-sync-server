@@ -4,7 +4,10 @@
   },
   "http": {
     "listen_host": "0.0.0.0",
-    "listen_port": 8001
+    "listen_port": 8001,
+    "ssl": false,
+    "ssl_crt": null,
+    "ssl_key": null
   },
   "database": {
     "db_type": "sqlite",

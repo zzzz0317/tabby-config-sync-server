@@ -116,6 +116,9 @@ if __name__ == '__main__':
     parser_serve = subparsers.add_parser(COMMAND_SERVE, help="Start HTTP server")
     parser_serve.add_argument("--host", type=str, default=http_listen_host, help="HTTP listen host")
     parser_serve.add_argument("--port", type=int, default=http_listen_port, help="HTTP listen port")
+    parser_serve.add_argument('--ssl', action="store_true", help='Use SSL')
+    parser_serve.add_argument('--sslcrt', type=str, default=None, help="SSL certificate")
+    parser_serve.add_argument('--sslkey', type=str, default=None, help="SSL key")
 
     parser_create_user = subparsers.add_parser(COMMAND_CREATE_USER, help="Create user")
     parser_create_user.add_argument("username", type=str, help="User\'s name, unique")
@@ -134,7 +137,21 @@ if __name__ == '__main__':
     args_command = args.command
 
     if args_command == COMMAND_SERVE:
-        app.run(host=args.host, port=args.port)
+        if args.ssl:
+            if args.sslcrt is None or args.sslkey is None:
+                parser_serve.print_help()
+                print("\nThe ssl certificate and private key were not specified!")
+                exit(1)
+            elif not os.path.exists(args.sslcrt):
+                print("SSL certificate file", args.sslcrt, "not found")
+                exit(1)
+            elif not os.path.exists(args.sslkey):
+                print("SSL private key file", args.sslkey, "not found")
+                exit(1)
+            else:
+                app.run(host=args.host, port=args.port, ssl_context=(args.sslcrt, args.sslkey))
+        else:
+            app.run(host=args.host, port=args.port)
     elif args_command == COMMAND_CREATE_USER:
         username = args.username
         token = args.token
