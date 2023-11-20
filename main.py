@@ -101,7 +101,7 @@ def handle_single_config(config_id):
                 ConfigHistory.create(
                     config=config,
                     name=old_config.get('name', ''),
-                    content=old_config.get('name', '{}'),
+                    content=old_config.get('content', '{}'),
                     last_used_with_version=old_config.get('last_used_with_version', None),
                     created_at=old_config['created_at']
                 )
