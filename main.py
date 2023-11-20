@@ -161,3 +161,5 @@ if __name__ == '__main__':
         user.config_sync_token = token
         user.save()
         print(f"Reset user {username}'s token success")
+    else:
+        parser.print_usage()
