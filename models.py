@@ -18,7 +18,7 @@ if db_type == "sqlite":
 elif db_type == "mysql":
     database = peewee.MySQLDatabase(db_name, user=db_user, password=db_pass,
                                     host=db_host, port=db_port)
-elif db_type == "mysql":
+elif db_type == "postgresql":
     database = peewee.PostgresqlDatabase(db_name, user=db_user, password=db_pass,
                                          host=db_host, port=db_port)
 else:
