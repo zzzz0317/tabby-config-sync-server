@@ -1,7 +1,7 @@
 import argparse
 import re
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from playhouse.shortcuts import model_to_dict
 
 from const import *
@@ -107,6 +107,13 @@ def handle_single_config(config_id):
                 )
             config.save()
     return jsonify(format_config_dict(model_to_dict(config)))
+
+
+@app.errorhandler(404)
+def handle_not_found(error):
+    response = make_response("404 Not Found")
+    response.headers["Content-Type"] = "text/plain"
+    return response, 404
 
 
 if __name__ == '__main__':
