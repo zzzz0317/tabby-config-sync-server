@@ -8,4 +8,4 @@ http_listen_host = config_data.get("listen_host", "127.0.0.1")
 http_listen_port = int(config_data.get("listen_port", 8001))
 
 sync_config_data = config_data.get("sync", {})
-sync_keep_old = sync_config_data.get("keep_old", False)
+sync_save_old = sync_config_data.get("save_old", False)

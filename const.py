@@ -1,3 +1,9 @@
+import os
+import sys
+
+DIR_SCRIPT = os.path.dirname(os.path.realpath(sys.argv[0]))
+DIR_RUNNING = os.getcwd()
+
 CHECK_USERNAME_PATTERN = r'^[a-zA-Z0-9]+$'
 
 COMMAND_SERVE = "serve"

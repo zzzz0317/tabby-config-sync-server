@@ -33,7 +33,7 @@ class BaseModel(peewee.Model):
 class User(BaseModel):
     username = peewee.CharField(max_length=255, unique=True)
     active_config = peewee.DeferredForeignKey('Config', null=True, backref='+', on_delete='SET_NULL')
-    config_sync_token = peewee.CharField(max_length=255)
+    config_sync_token = peewee.CharField(max_length=255, unique=True)
     created_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
     modified_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
     enable = peewee.BooleanField(default=True)
@@ -56,7 +56,15 @@ class Config(BaseModel):
         return super(Config, self).save(force_insert=force_insert, only=only)
 
 
+class ConfigHistory(BaseModel):
+    config = peewee.ForeignKeyField(Config, on_delete='CASCADE')
+    name = peewee.CharField(max_length=255)
+    content = peewee.TextField(default="{}")
+    last_used_with_version = peewee.CharField(max_length=32, null=True)
+    created_at = peewee.DateTimeField()
+    modified_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
+
+
 User.create_table()
 Config.create_table()
-
-# TODO: Save old config
+ConfigHistory.create_table()

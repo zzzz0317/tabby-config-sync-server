@@ -6,7 +6,7 @@ from playhouse.shortcuts import model_to_dict
 
 from const import *
 from config import *
-from models import User, Config
+from models import User, Config, ConfigHistory
 from util import *
 
 app = Flask(__name__)
@@ -20,9 +20,9 @@ def get_config_by_user_and_config_id(user, config_id):
         return None
 
 
-def get_user_by_config_sync_token(token):
+def get_user_by_config_sync_token(config_sync_token):
     try:
-        return User.get((User.config_sync_token == token) & User.enable)
+        return User.get((User.config_sync_token == config_sync_token) & User.enable)
     except:
         return None
 
@@ -89,10 +89,23 @@ def handle_single_config(config_id):
         return jsonify(RESP_NOT_FOUND)
     if request.method == 'PATCH':
         data = request.json
+        flag_is_changed = False
+        old_config = model_to_dict(config)
         for k in ['name', 'content', 'last_used_with_version']:
             if k in data.keys():
-                setattr(config, k, data[k])
-        config.save()
+                if getattr(config, k) != data[k]:
+                    setattr(config, k, data[k])
+                    flag_is_changed = True
+        if flag_is_changed:
+            if sync_save_old:
+                ConfigHistory.create(
+                    config=config,
+                    name=old_config.get('name', ''),
+                    content=old_config.get('name', '{}'),
+                    last_used_with_version=old_config.get('last_used_with_version', None),
+                    created_at=old_config['created_at']
+                )
+            config.save()
     return jsonify(format_config_dict(model_to_dict(config)))
 
 
