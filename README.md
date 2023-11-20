@@ -4,6 +4,46 @@ A tabby web service that only includes sync function
 
 -----
 
+## Configuration example
+
+```json
+{
+  "sync": {
+    "save_old": false
+  },
+  "http": {
+    "listen_host": "0.0.0.0",
+    "listen_port": 8001,
+    "ssl": false,
+    "ssl_crt": null,
+    "ssl_key": null
+  },
+  "database": {
+    "db_type": "sqlite",
+    "db_name": "tabbyss.db",
+    "db_host": "127.0.0.1",
+    "db_port": "3306",
+    "db_user": "tabbyss",
+    "db_pass": "tabbyss"
+  }
+}
+```
+
+| Category | Key         | Type   | Note                                       |
+|----------|-------------|--------|--------------------------------------------|
+| sync     | save_old    | Bool   | Save old data to another table             |
+| http     | listen_host | String | HTTP listen host (python main.py serve)    |
+| http     | listen_port | String | HTTP listen port (python main.py serve)    |
+| http     | ssl         | Bool   | Use HTTPS (python main.py serve)           |
+| http     | ssl_crt     | Bool   | HTTPS cert path (python main.py serve)     |
+| http     | ssl_key     | Bool   | HTTPS key path (python main.py serve)      |
+| database | db_type     | String | Database type: sqlite / mysql / postgresql |
+| database | db_name     | String | Database name, filename if use sqlite      |
+| database | db_host     | String | Database host                              |
+| database | db_port     | String | Database port                              |
+| database | db_user     | String | Database username                          |
+| database | db_pass     | String | Database password                          |
+
 ## Run with waitress
 
 ```shell
