@@ -1,0 +1,17 @@
+[Unit]
+Description=Tabby Config Sync Server
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+
+WorkingDirectory=/var/www/tabby-config-sync-server
+ExecStart=waitress-serve --host 0.0.0.0 --port 8001 main:app
+
+Restart=on-failure
+StartLimitInterval=60s
+StartLimitBurst=5
+
+[Install]
+WantedBy=default.target
