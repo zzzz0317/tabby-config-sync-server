@@ -6,7 +6,7 @@ from playhouse.shortcuts import model_to_dict
 
 from const import *
 from config import *
-from models import User, Config, ConfigHistory
+from models import User, Config, ConfigHistory, ConfigDeleteHistory
 from util import *
 
 app = Flask(__name__)
@@ -40,7 +40,7 @@ def get_user_by_request(request):
 def handle_get_user():
     user = get_user_by_request(request)
     if user is None:
-        return jsonify(RESP_NOT_LOGIN)
+        return jsonify(RESP_NOT_LOGIN), 403
     data = {
         "id": user.id,
         "username": user.username,
@@ -59,7 +59,7 @@ def handle_get_user():
 def handle_configs():
     user = get_user_by_request(request)
     if user is None:
-        return jsonify(RESP_NOT_LOGIN)
+        return jsonify(RESP_NOT_LOGIN), 403
     if request.method == 'GET':
         data_list = []
         data_query = Config.select().where((Config.user == user))
@@ -79,14 +79,14 @@ def handle_configs():
         return jsonify(dd), 201
 
 
-@app.route('/api/1/configs/<int:config_id>', methods=['GET', 'PATCH'])
+@app.route('/api/1/configs/<int:config_id>', methods=['GET', 'PATCH', 'DELETE'])
 def handle_single_config(config_id):
     user = get_user_by_request(request)
     if user is None:
-        return jsonify(RESP_NOT_LOGIN)
+        return jsonify(RESP_NOT_LOGIN), 403
     config = get_config_by_user_and_config_id(user, config_id)
     if not config:
-        return jsonify(RESP_NOT_FOUND)
+        return jsonify(RESP_NOT_FOUND), 404
     if request.method == 'PATCH':
         data = request.json
         flag_is_changed = False
@@ -106,6 +106,18 @@ def handle_single_config(config_id):
                     created_at=old_config['created_at']
                 )
             config.save()
+    if request.method == 'DELETE':
+        if sync_save_old:
+            ConfigDeleteHistory.create(
+                user=user,
+                name=config.name,
+                content=config.content,
+                last_used_with_version=config.last_used_with_version,
+                created_at=config.created_at
+            )
+        config.delete_instance()
+        return "", 204
+
     return jsonify(format_config_dict(model_to_dict(config)))
 
 

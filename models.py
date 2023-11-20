@@ -65,6 +65,16 @@ class ConfigHistory(BaseModel):
     modified_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
 
 
+class ConfigDeleteHistory(BaseModel):
+    user = peewee.ForeignKeyField(User, backref='configs', on_delete='CASCADE')
+    name = peewee.CharField(max_length=255)
+    content = peewee.TextField(default="{}")
+    last_used_with_version = peewee.CharField(max_length=32, null=True)
+    created_at = peewee.DateTimeField()
+    modified_at = peewee.DateTimeField(default=datetime.datetime.utcnow)
+
+
 User.create_table()
 Config.create_table()
 ConfigHistory.create_table()
+ConfigDeleteHistory.create_table()
