@@ -144,6 +144,10 @@ if __name__ == '__main__':
     parser_create_user.add_argument("--token", type=str, default="",
                                     help="config_sync_token, default is auto generate")
 
+    parser_enable_user = subparsers.add_parser(COMMAND_ENABLE_USER, help="Enable/Disable user")
+    parser_enable_user.add_argument("username", type=str, help="User\'s name")
+    parser_enable_user.add_argument('--disable', action="store_true", help='Disable user')
+
     parser_delete_user = subparsers.add_parser(COMMAND_DELETE_USER, help="Delete user")
     parser_delete_user.add_argument("username", type=str, help="User\'s name")
 
@@ -181,11 +185,20 @@ if __name__ == '__main__':
         if not re.match(CHECK_USERNAME_PATTERN, username):
             raise Exception("Username has unexpected character")
         User.create(username=username, config_sync_token=token)
-        print(f"Create user {username} success")
+        print("Create user", username, "success")
     elif args_command == COMMAND_DELETE_USER:
         username = args.username
         User.get(username=username).delete_instance()
-        print(f"Delete user {username} success")
+        print("Delete user", username, "success")
+    elif args_command == COMMAND_ENABLE_USER:
+        username = args.username
+        user = User.get(username=username)
+        if args.disable:
+            user.enable = False
+        else:
+            user.enable = True
+        user.save()
+        print("Disable" if args.disable else "Enable", "user", username, "success")
     elif args_command == COMMAND_RESET_USER_TOKEN:
         username = args.username
         token = args.token

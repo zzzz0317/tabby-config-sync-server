@@ -8,6 +8,7 @@ CHECK_USERNAME_PATTERN = r'^[a-zA-Z0-9]+$'
 
 COMMAND_SERVE = "serve"
 COMMAND_CREATE_USER = "createuser"
+COMMAND_ENABLE_USER = "enableuser"
 COMMAND_DELETE_USER = "deleteuser"
 COMMAND_RESET_USER_TOKEN = "resetusertoken"
 
